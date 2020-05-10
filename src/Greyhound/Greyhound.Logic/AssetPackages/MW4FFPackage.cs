@@ -56,21 +56,57 @@ namespace Greyhound.Logic
         }
 
         /// <summary>
-        /// DXGI Formats
+        /// 
         /// </summary>
-        private readonly Dictionary<int, ScratchImage.DXGIFormat> Formats = new Dictionary<int, ScratchImage.DXGIFormat>()
+        private readonly ScratchImage.DXGIFormat[] Formats =
         {
-            { 7,  ScratchImage.DXGIFormat.R8G8B8A8UNORM },
-            { 6,  ScratchImage.DXGIFormat.R8G8B8G8UNORM },
-            { 33, ScratchImage.DXGIFormat.BC1UNORM },
-            { 34, ScratchImage.DXGIFormat.BC1UNORM },
-            { 37, ScratchImage.DXGIFormat.BC3UNORM },
-            { 38, ScratchImage.DXGIFormat.BC3UNORM },
-            { 39, ScratchImage.DXGIFormat.BC4UNORM },
-            { 40, ScratchImage.DXGIFormat.BC5UNORM },
-            { 42, ScratchImage.DXGIFormat.BC6HUF16 },
-            { 44, ScratchImage.DXGIFormat.BC7UNORM },
-            { 45, ScratchImage.DXGIFormat.BC7UNORM },
+            ScratchImage.DXGIFormat.FORCEUINT,
+            ScratchImage.DXGIFormat.R8UNORM,
+            ScratchImage.DXGIFormat.A8UNORM,
+            ScratchImage.DXGIFormat.A8UNORM,
+            ScratchImage.DXGIFormat.R8G8UNORM,
+            ScratchImage.DXGIFormat.R8G8UNORM,
+            ScratchImage.DXGIFormat.R8G8B8A8UNORM,
+            ScratchImage.DXGIFormat.R8G8B8A8UNORM,
+            ScratchImage.DXGIFormat.R8SNORM,
+            ScratchImage.DXGIFormat.R8G8SNORM,
+            ScratchImage.DXGIFormat.R16UNORM,
+            ScratchImage.DXGIFormat.R16G16UNORM,
+            ScratchImage.DXGIFormat.R16G16B16A16UNORM,
+            ScratchImage.DXGIFormat.R16SNORM,
+            ScratchImage.DXGIFormat.R16FLOAT,
+            ScratchImage.DXGIFormat.R16G16FLOAT,
+            ScratchImage.DXGIFormat.R16G16B16A16FLOAT,
+            ScratchImage.DXGIFormat.R32FLOAT,
+            ScratchImage.DXGIFormat.R32G32FLOAT,
+            ScratchImage.DXGIFormat.R32G32B32A32FLOAT,
+            ScratchImage.DXGIFormat.D32FLOAT,
+            ScratchImage.DXGIFormat.D32FLOATS8X24UINT,
+            ScratchImage.DXGIFormat.R8UINT,
+            ScratchImage.DXGIFormat.R16UINT,
+            ScratchImage.DXGIFormat.R32UINT,
+            ScratchImage.DXGIFormat.R32G32UINT,
+            ScratchImage.DXGIFormat.R32G32B32A32UINT,
+            ScratchImage.DXGIFormat.R10G10B10A2UINT,
+            ScratchImage.DXGIFormat.B5G6R5UNORM,
+            ScratchImage.DXGIFormat.B5G6R5UNORM,
+            ScratchImage.DXGIFormat.R10G10B10A2UNORM,
+            ScratchImage.DXGIFormat.R9G9B9E5SHAREDEXP,
+            ScratchImage.DXGIFormat.R11G11B10FLOAT,
+            ScratchImage.DXGIFormat.BC1UNORM,
+            ScratchImage.DXGIFormat.BC1UNORM,
+            ScratchImage.DXGIFormat.BC2UNORM,
+            ScratchImage.DXGIFormat.BC2UNORM,
+            ScratchImage.DXGIFormat.BC3UNORM,
+            ScratchImage.DXGIFormat.BC3UNORM,
+            ScratchImage.DXGIFormat.BC4UNORM,
+            ScratchImage.DXGIFormat.BC5UNORM,
+            ScratchImage.DXGIFormat.BC5SNORM,
+            ScratchImage.DXGIFormat.BC6HUF16,
+            ScratchImage.DXGIFormat.BC6HSF16,
+            ScratchImage.DXGIFormat.BC7UNORM,
+            ScratchImage.DXGIFormat.BC7UNORM,
+            ScratchImage.DXGIFormat.R8G8B8A8SNORM
         };
 
         /// <summary>
@@ -119,14 +155,21 @@ namespace Greyhound.Logic
                 {
                     if(entry.Value is MW4FFPackageEntry ffEntry)
                     {
+                        var header = (ImageHeader)ffEntry.AssetHeader;
+
                         results.Add(new ImageAsset()
                         {
-                            Name         = ffEntry.Name,
-                            Type         = ffEntry.Type,
-                            Information  = ffEntry.Info,
-                            Status       = "Loaded",
-                            Data         = ffEntry,
-                            Game         = Game
+                            Name        = ffEntry.Name,
+                            Type        = ffEntry.Type,
+                            Width       = header.Width,
+                            Height      = header.Height,
+                            Format      = Formats[header.ImageFormat],
+                            CubeMap     = false, // MW does not use cube maps, it uses octahedron for reflections/sky
+                            Information = string.Format("Width: {0} Height: {1}", header.Width, header.Height),
+                            Status      = "Loaded",
+                            Data        = ffEntry,
+                            Game        = Game,
+                            LoadMethod  = ImageHelper.LoadGenericImage,
                         });
                     }
                 }
@@ -231,6 +274,8 @@ namespace Greyhound.Logic
 
                     // Check name pointer and size (if > 32MB or 0 don't even bother)
                     if (
+                        imageHeader.ImageFormat > 0 &&
+                        imageHeader.ImageFormat < Formats.Length &&
                         imageHeader.BufferSize < 0x2000000 &&
                         imageHeader.BufferSize != 0 && 
                         imageHeader.LoadedImagePointer == -2 &&

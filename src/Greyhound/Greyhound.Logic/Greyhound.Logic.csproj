@@ -68,9 +68,9 @@
     <Compile Include="Assets\Asset.cs" />
     <Compile Include="Interfaces\IModelFormatWriter.cs" />
     <Compile Include="Helpers\XAnimFileHelper.cs" />
-    <Compile Include="Packages\AWFFPackage.cs" />
-    <Compile Include="Packages\MW4FFPackage.cs" />
-    <Compile Include="Packages\XPAKPackage.cs" />
+    <Compile Include="AssetPackages\AWFFPackage.cs" />
+    <Compile Include="AssetPackages\MW4FFPackage.cs" />
+    <Compile Include="AssetPackages\XPAKPackage.cs" />
     <Compile Include="Utility\HalfFloat.cs" />
     <Compile Include="Assets\MaterialAsset.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="Interfaces\IPackage.cs" />
     <Compile Include="ModelTemp.cs" />
     <Compile Include="Notifiable.cs" />
-    <Compile Include="Packages\IWDPackage.cs" />
+    <Compile Include="AssetPackages\IWDPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\NumericsExtensions.cs" />
