@@ -191,6 +191,17 @@ namespace Greyhound.Logic
             }
         }
 
+        public static void LoadGenericImage(Asset asset)
+        {
+            var image = asset as ImageAsset;
+            var buffer = Instance.ExtractPackageEntry(image.Data, -1);
+
+            if (buffer == null)
+                return;
+
+            image.RawImage = ImageHelper.ConvertRawImage(buffer, image.Width, image.Height, image.Format, 0, image.CubeMap, null);
+        }
+
         /// <summary>
         /// Converts a DDS to a Scratch Image
         /// </summary>
