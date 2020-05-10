@@ -1,0 +1,42 @@
+﻿<Window x:Class="Greyhound.CascSelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Greyhound"
+        mc:Ignorable="d"
+        Title="Greyhound | Select CASC File"
+        Background="#FF373737"
+        Height="395.685" Width="488.421"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <!-- Side Bar -->
+        <TextBox VerticalContentAlignment="Center" 
+            Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}" 
+            Height="28" 
+            TextWrapping="NoWrap" 
+            VerticalAlignment="Top"/>
+        <!-- Asset List -->
+        <ListView x:Name="FileList" 
+            VirtualizingPanel.IsVirtualizing="True" 
+            VirtualizingPanel.VirtualizationMode="Recycling" 
+            AllowDrop="True" 
+            Margin="0,28" 
+            Foreground="White" 
+            ItemsSource="{Binding Files}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="450" Header="Name" DisplayMemberBinding="{Binding FileName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="Load Selected" Click="LoadClick" VerticalAlignment="Bottom" Height="28"/>
+    </Grid>
+</Window>

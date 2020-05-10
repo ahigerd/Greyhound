@@ -1,0 +1,31 @@
+﻿<Window x:Class="Greyhound.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Rottweiler | Settings"
+        Background="#FF373737"
+        Height="179.237" Width="319.985"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <!-- General -->
+        <!-- Textures -->
+        <Rectangle Margin="10,19,10,10" Stroke="White"/>
+        <Label Content="Settings" HorizontalAlignment="Left" Margin="26,0,0,0" VerticalAlignment="Top" Background="#FF373737" Foreground="White" FontSize="18" Height="34"/>
+        <CheckBox x:Name="ExportPNG" Foreground="White" Content="Export as PNG" IsChecked="True" HorizontalAlignment="Left" Margin="26,65,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="ExportTIFF" Foreground="White" Content="Export as TIFF" HorizontalAlignment="Left" Margin="178,65,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="ExportDDS" Foreground="White" Content="Export as DDS" HorizontalAlignment="Left" Margin="26,85,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="ExportJPG" Foreground="White" Content="Export as JPG" HorizontalAlignment="Left" Margin="178,85,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="ExportBMP" Foreground="White" Content="Export as BMP" HorizontalAlignment="Left" Margin="26,105,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="ExportTGA" Foreground="White" Content="Export as TGA" Margin="178,105,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="93"/>
+        <Label Content="Textures" Margin="26,39,10,0" VerticalAlignment="Top" Foreground="White"/>
+    </Grid>
+</Window>
