@@ -226,8 +226,8 @@ bool GameBlackOpsCW::LoadOffsets()
             {
                 // Validate sizes
                 if (
-                    AnimPoolData.AssetSize  == sizeof(BOCWXAnim) && 
-                    ModelPoolData.AssetSize == sizeof(BOCWXModel) && 
+                    AnimPoolData.AssetSize  == sizeof(BOCWXAnim) &&
+                    ModelPoolData.AssetSize == sizeof(BOCWXModel) &&
                     ImagePoolData.AssetSize == sizeof(BOCWGfxImage))
                 {
                     // Verify string table, otherwise we are all set
@@ -467,7 +467,7 @@ bool GameBlackOpsCW::LoadAssets()
             LoadedSound->Length        = (uint32_t)(1000.0f * (float)(LoadedSound->FrameCount / (float)(LoadedSound->FrameRate)));
             // Add
             CoDAssets::GameAssets->LoadedAssets.push_back(LoadedSound);
-           
+
         });
     }
 
@@ -674,6 +674,8 @@ std::unique_ptr<XSound> GameBlackOpsCW::ReadXSound(const CoDSound_t * Sound)
     auto SoundData = CoDAssets::GameInstance->Read<BOCWSoundAsset>(Sound->AssetPointer);
     // Buffer
     std::unique_ptr<uint8_t[]> SoundBuffer = nullptr;
+    // Check to see if Opus can be dumped raw
+    bool DumpOpus = SettingsManager::GetSetting("exportsnd", "WAV") == "Opus";
 
     // Offset to the data, depending on the buffer
     uint32_t OpusDataSize       = 0;
@@ -706,9 +708,21 @@ std::unique_ptr<XSound> GameBlackOpsCW::ReadXSound(const CoDSound_t * Sound)
         OpusDataOffset = 288;
     }
 
-    
+
     if(SoundBuffer == nullptr)
         return nullptr;
+
+    // Prepare to read the sound data, for WAV, we must include a WAV header...
+    auto Result = std::make_unique<XSound>();
+
+    if (DumpOpus)
+    {
+      Result->DataBuffer = new int8_t[OpusDataSize];
+      Result->DataType = SoundDataTypes::Opus_WithHeader;
+      Result->DataSize = OpusDataSize;
+      std::memcpy(Result->DataBuffer, SoundBuffer.get() + OpusDataOffset, OpusDataSize);
+      return Result;
+    }
 
     // Initialize Opus
     int ErrorCode;
@@ -749,9 +763,6 @@ std::unique_ptr<XSound> GameBlackOpsCW::ReadXSound(const CoDSound_t * Sound)
         OpusConsumed       += BlockSize;
         PCMDataSize        += 960 * 2 * SoundData.ChannelCount;
     }
-
-    // Prepare to read the sound data, for WAV, we must include a WAV header...
-    auto Result = std::make_unique<XSound>();
 
     // The offset of which to store the data
     uint32_t DataOffset = 0;
@@ -816,7 +827,7 @@ const XMaterial_t GameBlackOpsCW::ReadXMaterial(uint64_t MaterialPointer)
 
         // Default type
         auto DefaultUsage = ImageUsageType::Unknown;
-        // Check 
+        // Check
         switch (ImageInfo.SemanticHash)
         {
         case 0xA0AB1041:
@@ -1074,7 +1085,7 @@ void GameBlackOpsCW::LoadXModel(const XModelLod_t& ModelLOD, const std::unique_p
             {
                 // Grab the reference
                 auto& Vertex = Mesh.Verticies[i];
-                
+
                 // Check if we're a complex weight, up to four weights
                 if (((uint8_t)Submesh.WeightCounts[0] & 2) > 0)
                 {

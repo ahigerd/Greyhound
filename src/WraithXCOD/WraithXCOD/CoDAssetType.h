@@ -116,7 +116,8 @@ enum class SoundDataTypes
     WAV_WithHeader,
     WAV_NeedsHeader,
     FLAC_WithHeader,
-    FLAC_NeedsHeader
+    FLAC_NeedsHeader,
+    Opus_WithHeader
 };
 
 // A class that represents a sound asset
@@ -260,7 +261,7 @@ struct XModelLod_t
     std::vector<XModelSubmesh_t> Submeshes;
     // A list of material info per-submesh
     std::vector<XMaterial_t> Materials;
-    
+
     // A key used for the lod data if it's streamed
     uint64_t LODStreamKey;
     // A pointer used for the stream mesh info

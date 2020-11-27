@@ -58,12 +58,14 @@ void SoundSettings::OnBeforeLoad()
     // Add
     ComboControl->InsertString(0, L"WAV");
     ComboControl->InsertString(1, L"FLAC");
+    ComboControl->InsertString(2, L"Opus (BOCW Only)");
 
     // Image settings
     auto ImageFormat = SettingsManager::GetSetting("exportsnd", "WAV");
     // Apply
     if (ImageFormat == "WAV") { ComboControl->SetCurSel(0); }
     if (ImageFormat == "FLAC") { ComboControl->SetCurSel(1); }
+    if (ImageFormat == "Opus") { ComboControl->SetCurSel(2); }
 }
 
 void SoundSettings::OnKeepPaths()
@@ -107,6 +109,7 @@ void SoundSettings::OnSoundFormat()
     {
     case 0: SettingsManager::SetSetting("exportsnd", "WAV"); break;
     case 1: SettingsManager::SetSetting("exportsnd", "FLAC"); break;
+    case 2: SettingsManager::SetSetting("exportsnd", "Opus"); break;
     default: SettingsManager::SetSetting("exportsnd", "WAV"); break;
     }
 }

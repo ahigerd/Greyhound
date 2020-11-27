@@ -119,7 +119,7 @@ ExportStatusHandler CoDAssets::OnExportStatus = nullptr;
 std::string CoDAssets::LatestExportPath = "";
 
 // Image Hashes from Black Ops 3's Techsets
-std::map<uint32_t, std::string> SemanticHashes = 
+std::map<uint32_t, std::string> SemanticHashes =
 {
     { 0xA0AB1041, "colorMap" },
     { 0xB34B914B, "minimapMask" },
@@ -702,7 +702,7 @@ LoadGameFileResult CoDAssets::LoadFile(const std::string& FilePath)
             {
                 // Default to WAW path
                 GameID = SupportedGames::WorldAtWar;
-            }    
+            }
 
             // Set file mode
             GameFlags = SupportedGameFlags::Files;
@@ -712,7 +712,7 @@ LoadGameFileResult CoDAssets::LoadFile(const std::string& FilePath)
     {
         // Pass off to SAB File Parser
         LoadResult = SABSupport::ParseSAB(FilePath);
-        
+
         // Cache if success
         if (LoadResult)
         {
@@ -1635,11 +1635,11 @@ ExportGameResult CoDAssets::ExportImageAsset(const CoDImage_t* Image, const std:
             case SupportedGames::BlackOps:
                 ImageData = IWDSupport::ReadImageFile(Image);
                 break;
-                
-            case SupportedGames::BlackOps2: 
+
+            case SupportedGames::BlackOps2:
                 ImageData = IPAKSupport::ReadImageFile(Image);
                 break;
-            case SupportedGames::BlackOps3: 
+            case SupportedGames::BlackOps3:
             case SupportedGames::BlackOps4:
             case SupportedGames::BlackOpsCW:
             case SupportedGames::ModernWarfare4:
@@ -1776,7 +1776,9 @@ ExportGameResult CoDAssets::ExportSoundAsset(const CoDSound_t* Sound, const std:
         if (SoundData != nullptr)
         {
             // Check what format the DATA is, and see if we need to transcode
-            if (((SoundData->DataType == SoundDataTypes::FLAC_WithHeader && SoundFormatType == SoundFormat::Standard_FLAC) || SoundData->DataType == SoundDataTypes::WAV_WithHeader && SoundFormatType == SoundFormat::Standard_WAV) || CoDAssets::GameID == SupportedGames::WorldAtWar)
+            bool DumpFLAC = (SoundData->DataType == SoundDataTypes::FLAC_WithHeader && SoundFormatType == SoundFormat::Standard_FLAC);
+            bool DumpWAV = (SoundData->DataType == SoundDataTypes::WAV_WithHeader && SoundFormatType == SoundFormat::Standard_WAV);
+            if (DumpFLAC || DumpWAV || CoDAssets::GameID == SupportedGames::WorldAtWar || SoundData->DataType == SoundDataTypes::Opus_WithHeader)
             {
                 // We have an already-prepared sound buffer, just write it
                 // Since this can throw, wrap it in an exception handler
@@ -2212,7 +2214,7 @@ void CoDAssets::ExportSelectedAssets(void* Caller, const std::unique_ptr<std::ve
     GetSystemInfo(&SystemInfo);
     // Get count
     auto NumberOfCores = SystemInfo.dwNumberOfProcessors;
-    
+
 #if _DEBUG
     // Clamp it, no less than 1, no more than 3
     auto DegreeOfConverter = 1;
